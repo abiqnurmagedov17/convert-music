@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Converter Santuy</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; text-align: center; background: #1a1a1a; color: white; }
+        .box { background: #2a2a2a; padding: 20px; border-radius: 10px; }
+        input, select, button { margin: 10px 0; padding: 10px; width: 100%; border-radius: 5px; border: none; }
+        button { background: #4CAF50; color: white; cursor: pointer; font-weight: bold; }
+        button:hover { background: #45a049; }
+        #status { margin-top: 15px; color: #ffeb3b; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Ubah Ekstensi File 🎵</h2>
+        
+        <input type="file" id="fileInput" accept="audio/*, video/*">
+        
+        <p id="deteksiText">Ekstensi saat ini: <b>-</b></p>
+
+        <label for="targetExt">Mau di-convert ke mana nih?</label>
+        <select id="targetExt" disabled>
+            <option value="mp3">MP3</option>
+            <option value="wav">WAV</option>
+            <option value="ogg">OGG</option>
+            <option value="m4a">M4A</option>
+        </select>
+
+        <button id="btnConvert" disabled>Convert & Download</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const targetExt = document.getElementById('targetExt');
+        const btnConvert = document.getElementById('btnConvert');
+        const deteksiText = document.getElementById('deteksiText');
+        const statusDiv = document.getElementById('status');
+
+        let selectedFile = null;
+
+        // Auto deteksi saat file dipilih
+        fileInput.addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                const ext = selectedFile.name.split('.').pop().toLowerCase();
+                deteksiText.innerHTML = `Ekstensi saat ini: <b>.${ext}</b>`;
+                targetExt.disabled = false;
+                btnConvert.disabled = false;
+            }
+        });
+
+        // Proses submit ke backend
+        btnConvert.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('targetExt', targetExt.value);
+
+            statusDiv.innerText = "Lagi di-convert, sabar bro...";
+            btnConvert.disabled = true;
+
+            try {
+                const response = await fetch('/api/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error(await response.text());
+
+                // Logic buat download file hasil balikan dari server
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = `hasil_konversi.${targetExt.value}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                
+                statusDiv.innerText = "Beres! File lagi di-download.";
+            } catch (err) {
+                console.error(err);
+                statusDiv.innerText = `Waduh error: ${err.message}`;
+            } finally {
+                btnConvert.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
