@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎵 Audio Converter Pro - Konversi Cepat & Mudah</title>
+    <title>🎵 Audio Converter Pro - Konversi Real-time</title>
     <style>
         * {
             margin: 0;
@@ -73,20 +73,6 @@
             margin-bottom: 12px;
         }
 
-        .upload-area p {
-            color: rgba(255, 255, 255, 0.8);
-            margin: 8px 0;
-        }
-
-        .upload-hint {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        #fileInput {
-            display: none;
-        }
-
         .file-info {
             background: rgba(255, 255, 255, 0.08);
             border-radius: 12px;
@@ -101,14 +87,8 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .file-name {
@@ -133,17 +113,6 @@
             color: #00f2ff;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            color: white;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
         select {
             width: 100%;
             padding: 12px 16px;
@@ -152,21 +121,13 @@
             background: rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 14px;
+            margin-bottom: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        select:hover {
-            background: rgba(255, 255, 255, 0.15);
         }
 
         select:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-
-        select option {
-            background: #1a1a2e;
         }
 
         button {
@@ -178,8 +139,6 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         #btnConvert {
@@ -195,10 +154,8 @@
         #btnConvert:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
-        /* Progress Bar */
         .progress-section {
             margin-top: 24px;
             display: none;
@@ -206,27 +163,13 @@
 
         .progress-section.show {
             display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 13px;
         }
 
         .progress-bar-container {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             overflow: hidden;
-            height: 24px;
+            height: 30px;
             position: relative;
         }
 
@@ -237,7 +180,6 @@
             border-radius: 20px;
             transition: width 0.3s ease;
             position: relative;
-            overflow: hidden;
         }
 
         .progress-fill::after {
@@ -264,7 +206,6 @@
             color: white;
             font-size: 12px;
             font-weight: bold;
-            text-shadow: 0 0 4px rgba(0,0,0,0.5);
             z-index: 1;
         }
 
@@ -284,50 +225,14 @@
             font-size: 14px;
         }
 
-        .status-message.uploading {
-            background: rgba(33, 150, 243, 0.2);
-            color: #42a5f5;
-        }
+        .status-message.uploading { background: rgba(33, 150, 243, 0.2); color: #42a5f5; }
+        .status-message.converting { background: rgba(255, 193, 7, 0.2); color: #ffd54f; }
+        .status-message.success { background: rgba(76, 175, 80, 0.2); color: #81c784; }
+        .status-message.error { background: rgba(244, 67, 54, 0.2); color: #ef5350; }
 
-        .status-message.converting {
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffd54f;
-        }
-
-        .status-message.success {
-            background: rgba(76, 175, 80, 0.2);
-            color: #81c784;
-        }
-
-        .status-message.error {
-            background: rgba(244, 67, 54, 0.2);
-            color: #ef5350;
-        }
-
-        .eta-text {
-            font-family: monospace;
-            font-size: 13px;
-        }
-
-        /* Animasi tombol */
-        .btn-loading {
-            position: relative;
-            pointer-events: none;
-        }
-
-        .btn-loading::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: btnShimmer 1s infinite;
-        }
-
-        @keyframes btnShimmer {
-            to { left: 100%; }
+        .download-btn {
+            margin-top: 16px;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
         }
 
         footer {
@@ -341,64 +246,50 @@
 <body>
     <div class="container">
         <h1>🎵 Audio Converter Pro</h1>
-        <p class="subtitle">Konversi audio ke berbagai format dengan mudah</p>
+        <p class="subtitle">Upload → Konversi → Download</p>
 
-        <!-- Upload Area -->
         <div class="upload-area" id="uploadArea">
             <div class="upload-icon">📁</div>
             <p>Klik atau drag & drop file di sini</p>
-            <p class="upload-hint">Support: MP3, WAV, FLAC, M4A, OGG, AAC (max 500MB)</p>
-            <input type="file" id="fileInput" accept="audio/*,video/*">
+            <p class="upload-hint">Support: MP3, WAV, FLAC, M4A, OGG (max 500MB)</p>
+            <input type="file" id="fileInput" accept="audio/*,video/*" style="display:none">
         </div>
 
-        <!-- File Info -->
         <div class="file-info" id="fileInfo">
             <div class="file-name" id="fileName"></div>
             <div class="file-size" id="fileSize"></div>
             <div class="detection-badge" id="detectionBadge">-</div>
         </div>
 
-        <!-- Format Select -->
-        <div class="form-group">
-            <label>🎯 Convert ke format:</label>
-            <select id="targetExt" disabled>
-                <option value="mp3">MP3 (Universal, ukuran kecil)</option>
-                <option value="wav">WAV (Lossless, kualitas terbaik)</option>
-                <option value="ogg">OGG (Open source, balance)</option>
-                <option value="m4a">M4A (AAC, kompresi baik)</option>
-                <option value="flac">FLAC (Lossless, file besar)</option>
-            </select>
-        </div>
+        <select id="targetExt" disabled>
+            <option value="mp3">🎵 MP3 (Universal, ukuran kecil)</option>
+            <option value="wav">🎶 WAV (Lossless, kualitas terbaik)</option>
+            <option value="ogg">🎧 OGG (Open source, balance)</option>
+            <option value="m4a">📱 M4A (AAC, kompresi baik)</option>
+            <option value="flac">💎 FLAC (Lossless, file besar)</option>
+        </select>
 
-        <!-- Convert Button -->
         <button id="btnConvert" disabled>🚀 Mulai Konversi</button>
 
-        <!-- Progress Section -->
         <div class="progress-section" id="progressSection">
-            <div class="progress-header">
-                <span id="progressLabel">⚙️ Sedang konversi...</span>
-                <span id="progressPercent">0%</span>
-            </div>
             <div class="progress-bar-container">
                 <div class="progress-fill" id="progressFill"></div>
-                <div class="progress-percent" id="progressPercentText">0%</div>
+                <div class="progress-percent" id="progressPercent">0%</div>
             </div>
             <div class="progress-details">
                 <span id="progressTimemark">00:00:00</span>
-                <span id="progressEta" class="eta-text">⏳ Menghitung...</span>
+                <span id="progressEta">⏳ Menghitung...</span>
             </div>
         </div>
 
-        <!-- Status Message -->
         <div class="status-message" id="statusMessage" style="display: none;"></div>
 
         <footer>
-            ⚡ Konversi langsung di server | Hasil siap download otomatis
+            🔄 Progress real-time | File otomatis terhapus setelah download
         </footer>
     </div>
 
     <script>
-        // DOM Elements
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const fileInfo = document.getElementById('fileInfo');
@@ -410,18 +301,14 @@
         const progressSection = document.getElementById('progressSection');
         const progressFill = document.getElementById('progressFill');
         const progressPercent = document.getElementById('progressPercent');
-        const progressPercentText = document.getElementById('progressPercentText');
         const progressTimemark = document.getElementById('progressTimemark');
         const progressEta = document.getElementById('progressEta');
-        const progressLabel = document.getElementById('progressLabel');
         const statusMessage = document.getElementById('statusMessage');
 
         let selectedFile = null;
         let currentJobId = null;
         let progressInterval = null;
-        let uploadXHR = null;
 
-        // Format file size
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
             const k = 1024;
@@ -430,42 +317,30 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Show status message
-        function showStatus(message, type = 'converting') {
+        function showStatus(message, type) {
             statusMessage.textContent = message;
             statusMessage.className = `status-message ${type}`;
             statusMessage.style.display = 'block';
         }
 
-        // Update button state
-        function updateButtonState(isConverting, progress = null) {
-            if (isConverting) {
-                if (progress !== null && progress < 100) {
-                    btnConvert.innerHTML = `⏳ Konversi ${progress}%...`;
-                } else {
-                    btnConvert.innerHTML = '⏳ Memproses...';
-                }
-                btnConvert.disabled = true;
-                btnConvert.classList.add('btn-loading');
-            } else {
-                if (progress === 100) {
-                    btnConvert.innerHTML = '✅ Selesai! Download dimulai...';
-                    setTimeout(() => {
-                        if (!btnConvert.disabled) {
-                            btnConvert.innerHTML = '🚀 Mulai Konversi';
-                            btnConvert.classList.remove('btn-loading');
-                        }
-                    }, 2000);
-                } else {
-                    btnConvert.innerHTML = '🚀 Mulai Konversi';
-                    btnConvert.disabled = false;
-                    btnConvert.classList.remove('btn-loading');
-                }
+        function hideStatus() {
+            statusMessage.style.display = 'none';
+        }
+
+        function updateProgress(progress, timemark, eta) {
+            progressFill.style.width = `${progress}%`;
+            progressPercent.textContent = `${Math.floor(progress)}%`;
+            if (timemark) progressTimemark.textContent = timemark;
+            if (eta && eta > 0) {
+                const minutes = Math.floor(eta / 60);
+                const seconds = eta % 60;
+                progressEta.textContent = `⏱️ Sisa ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            } else if (progress > 0 && progress < 100) {
+                progressEta.textContent = `⏳ Menghitung estimasi...`;
             }
         }
 
-        // Polling progress
-        function startProgressPolling(jobId) {
+        async function pollProgress(jobId) {
             if (progressInterval) clearInterval(progressInterval);
             
             progressInterval = setInterval(async () => {
@@ -473,38 +348,33 @@
                     const response = await fetch(`/api/progress/${jobId}`);
                     const data = await response.json();
                     
-                    const progress = data.progress || 0;
-                    progressFill.style.width = `${progress}%`;
-                    progressPercent.textContent = `${Math.floor(progress)}%`;
-                    progressPercentText.textContent = `${Math.floor(progress)}%`;
-                    
-                    if (data.timemark) {
-                        progressTimemark.textContent = data.timemark;
+                    if (data.status === 'not_found') {
+                        clearInterval(progressInterval);
+                        showStatus('❌ Job expired atau tidak ditemukan', 'error');
+                        btnConvert.disabled = false;
+                        btnConvert.innerHTML = '🚀 Mulai Konversi';
+                        return;
                     }
                     
-                    if (data.eta && data.eta > 0) {
-                        const minutes = Math.floor(data.eta / 60);
-                        const seconds = data.eta % 60;
-                        progressEta.textContent = `⏱️ Sisa ~${minutes}:${seconds.toString().padStart(2, '0')}`;
-                    } else if (progress > 0 && progress < 100) {
-                        progressEta.textContent = `⏳ Menghitung estimasi...`;
-                    }
+                    updateProgress(data.progress, data.timemark, data.eta);
                     
-                    updateButtonState(true, progress);
-                    
-                    if (data.status === 'complete' || progress >= 100) {
+                    if (data.status === 'completed') {
                         clearInterval(progressInterval);
                         progressInterval = null;
-                        progressFill.style.width = '100%';
-                        progressPercent.textContent = '100%';
-                        progressPercentText.textContent = '100%';
-                        progressLabel.textContent = '✅ Konversi selesai!';
-                        progressEta.textContent = '📥 Download akan dimulai...';
-                        showStatus('✅ Konversi berhasil! File sedang di-download...', 'success');
-                        updateButtonState(false, 100);
+                        updateProgress(100, data.timemark, 0);
+                        showStatus('✅ Konversi selesai! Mengunduh...', 'success');
                         
+                        // Auto download
+                        setTimeout(() => {
+                            window.location.href = `/api/download/${jobId}`;
+                        }, 500);
+                        
+                        // Reset UI setelah download
                         setTimeout(() => {
                             progressSection.classList.remove('show');
+                            btnConvert.disabled = false;
+                            btnConvert.innerHTML = '🚀 Mulai Konversi';
+                            hideStatus();
                         }, 3000);
                     }
                     
@@ -512,110 +382,66 @@
                         clearInterval(progressInterval);
                         progressInterval = null;
                         showStatus(`❌ Error: ${data.error || 'Konversi gagal'}`, 'error');
-                        updateButtonState(false);
                         btnConvert.disabled = false;
+                        btnConvert.innerHTML = '🚀 Mulai Konversi';
+                        progressSection.classList.remove('show');
                     }
                     
                 } catch (error) {
-                    console.error('Progress fetch error:', error);
+                    console.error('Polling error:', error);
                 }
             }, 1000);
         }
 
-        // Upload file dengan XMLHttpRequest (progress upload)
-        function uploadFile(file, targetFormat) {
-            return new Promise((resolve, reject) => {
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('targetExt', targetFormat);
-                
-                uploadXHR = new XMLHttpRequest();
-                
-                // Upload progress
-                uploadXHR.upload.onprogress = (e) => {
-                    if (e.lengthComputable) {
-                        const percent = Math.round((e.loaded / e.total) * 100);
-                        progressFill.style.width = `${percent}%`;
-                        progressPercent.textContent = `Upload ${percent}%`;
-                        progressPercentText.textContent = `${percent}%`;
-                        progressLabel.textContent = `📤 Uploading file... ${percent}%`;
-                        progressTimemark.textContent = `${formatFileSize(e.loaded)} / ${formatFileSize(e.total)}`;
-                        updateButtonState(true, percent);
-                    }
-                };
-                
-                uploadXHR.onload = () => {
-                    if (uploadXHR.status === 200) {
-                        try {
-                            const response = JSON.parse(uploadXHR.responseText);
-                            resolve(response);
-                        } catch (e) {
-                            reject(new Error('Invalid response from server'));
-                        }
-                    } else {
-                        reject(new Error(`Upload failed: ${uploadXHR.status}`));
-                    }
-                };
-                
-                uploadXHR.onerror = () => {
-                    reject(new Error('Network error during upload'));
-                };
-                
-                uploadXHR.open('POST', '/api/convert');
-                uploadXHR.send(formData);
-            });
-        }
-
-        // Main convert function
-        async function convertFile() {
+        async function startConversion() {
             if (!selectedFile) {
-                showStatus('Pilih file dulu ya!', 'error');
+                showStatus('Pilih file dulu!', 'error');
                 return;
             }
             
-            const targetFormat = targetExt.value;
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('targetExt', targetExt.value);
             
-            // Show progress section
+            showStatus('📤 Uploading file...', 'uploading');
             progressSection.classList.add('show');
-            showStatus('📤 Mengupload file ke server...', 'uploading');
-            progressLabel.textContent = '📤 Uploading file...';
-            progressFill.style.width = '0%';
-            progressPercent.textContent = '0%';
-            progressPercentText.textContent = '0%';
-            progressTimemark.textContent = '0 / 0';
-            progressEta.textContent = '⏳ Menghitung...';
-            
-            updateButtonState(true, 0);
+            updateProgress(0, '00:00:00', null);
+            btnConvert.disabled = true;
+            btnConvert.innerHTML = '⏳ Uploading...';
             
             try {
-                // Upload file
-                const result = await uploadFile(selectedFile, targetFormat);
-                currentJobId = result.jobId;
+                const response = await fetch('/api/convert', {
+                    method: 'POST',
+                    body: formData
+                });
                 
-                showStatus('⚙️ File terupload! Memulai konversi...', 'converting');
-                progressLabel.textContent = '🎵 Mengkonversi audio...';
+                const data = await response.json();
                 
-                // Start polling progress
-                startProgressPolling(currentJobId);
+                if (!response.ok) {
+                    throw new Error(data.error || 'Upload failed');
+                }
+                
+                currentJobId = data.jobId;
+                showStatus('⚙️ Memulai konversi...', 'converting');
+                btnConvert.innerHTML = '⏳ Konversi berjalan...';
+                
+                // Start polling for progress
+                pollProgress(currentJobId);
                 
             } catch (error) {
                 console.error('Conversion error:', error);
                 showStatus(`❌ Error: ${error.message}`, 'error');
-                progressSection.classList.remove('show');
-                updateButtonState(false);
                 btnConvert.disabled = false;
+                btnConvert.innerHTML = '🚀 Mulai Konversi';
+                progressSection.classList.remove('show');
             }
         }
-
-        // File selection handler
+        
         function handleFileSelect(file) {
             if (!file) return;
             
             selectedFile = file;
-            
-            // Get file extension
             const ext = file.name.split('.').pop().toLowerCase();
-            const validExts = ['mp3', 'wav', 'flac', 'm4a', 'ogg', 'aac', 'mp4', 'm4v'];
             
             fileName.textContent = file.name;
             fileSize.textContent = formatFileSize(file.size);
@@ -624,29 +450,17 @@
             
             targetExt.disabled = false;
             btnConvert.disabled = false;
-            btnConvert.innerHTML = '🚀 Mulai Konversi';
-            
-            // Auto-select format yang sesuai
-            if (ext === 'wav') {
-                targetExt.value = 'mp3';
-            } else if (ext === 'flac') {
-                targetExt.value = 'mp3';
-            }
         }
-
-        // Upload area click
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
-        });
         
-        // File input change
+        // Event listeners
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
         fileInput.addEventListener('change', (e) => {
             if (e.target.files && e.target.files[0]) {
                 handleFileSelect(e.target.files[0]);
             }
         });
         
-        // Drag & drop
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
@@ -659,24 +473,17 @@
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
-            
             if (e.dataTransfer.files && e.dataTransfer.files[0]) {
                 handleFileSelect(e.dataTransfer.files[0]);
                 fileInput.files = e.dataTransfer.files;
             }
         });
         
-        // Convert button click
-        btnConvert.addEventListener('click', convertFile);
+        btnConvert.addEventListener('click', startConversion);
         
         // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
-            if (uploadXHR) {
-                uploadXHR.abort();
-            }
-            if (progressInterval) {
-                clearInterval(progressInterval);
-            }
+            if (progressInterval) clearInterval(progressInterval);
         });
     </script>
 </body>
